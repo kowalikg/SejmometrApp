@@ -5,14 +5,14 @@ import java.util.ArrayList;
 /**
  * Created by Gabrysia on 16.12.2016.
  */
-public class Poseł {
+public class Member {
     private String firstName;
     private String lastName;
     private ArrayList<Integer> cadency = new ArrayList<Integer>();
 
     private ArrayList<Cost> costs = new ArrayList<>();
 
-    public Poseł(/* dane wyciagniete z jsona*/){
+    public Member(/* dane wyciagniete z jsona*/){
         /*
         stwórz posła
         określ kadencję
