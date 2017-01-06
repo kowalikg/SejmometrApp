@@ -7,12 +7,25 @@ import java.util.ArrayList;
  */
 public class Parliament {
     private int cadency;
-    private ArrayList<Member> posłowie = new ArrayList<>();
+    private ArrayList<Member> members = new ArrayList<>();
 
-    public float getAverageCosts(){
-        //wygeneruj na podstawie getow od posłów
-        return 0;
+    public Parliament(int cadency){
+        this.cadency = cadency;
     }
-    public Member getBlabla(){return null;} // kilka takich funkcji
+    public void pushMembers(ArrayList m){
+        members.addAll(m);
 
+    }
+    public void show(){
+        for (Member m: members){
+            System.out.println(m);
+        }
+    }
+    public void generateAverageCosts(){
+        for (Member m: members
+             ) {
+            m.generateCosts();
+
+        }
+    }
 }

@@ -110,4 +110,10 @@ public class ArgumentParser {
     public int getCadency(){
         return cadency;
     }
+    public String linkGenerator(){
+        String url =
+                "https://api-v3.mojepanstwo.pl/dane/poslowie.json?conditions%5Bposlowie.kadencja%5D=" + cadency +
+                        "&_type=objects&page=";
+        return url;
+    }
 }
