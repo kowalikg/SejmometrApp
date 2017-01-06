@@ -21,11 +21,24 @@ public class Parliament {
             System.out.println(m);
         }
     }
-    public void generateAverageCosts(){
+    public void generateCosts(){
         for (Member m: members
-             ) {
+                ) {
             m.generateCosts();
-
         }
+    }
+    public float getMemberLittleCosts(){
+        float sum = 0;
+        for (Member m: members) {
+            sum += m.getLittleCostsValue();
+        }
+        return sum;
+    }
+    public float generateAverageCosts(){
+        float costSum = 0;
+        for (Member m: members) {
+            costSum += m.getAllCosts();
+        }
+        return costSum/members.size();
     }
 }

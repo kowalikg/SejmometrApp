@@ -53,7 +53,7 @@ public class ArgumentParser {
 
     private boolean validateMemberName(){
 
-        if (argsToValidate[3].equals("-d") || argsToValidate.equals("-s")){
+        if (argsToValidate[3].equals("-d") || argsToValidate[3].equals("-s")){
 
             memberFirstName = argsToValidate[1];
             memberLastName = argsToValidate[2];
@@ -96,12 +96,8 @@ public class ArgumentParser {
         }
     }
 
-    public String getMemberFirstName() {
-        return memberFirstName;
-    }
-
-    public String getMemberLastName() {
-        return memberLastName;
+    public String getMemberName() {
+        return memberFirstName + " " + memberLastName;
     }
 
     public Option getOption() {
