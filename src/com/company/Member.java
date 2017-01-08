@@ -19,8 +19,8 @@ public class Member {
                 ".json?layers[]=wydatki");
         d.download();
         Parser parser = new Parser(d.getJsonResult());
-        parser.parseCosts();
-        costs.addAll(parser.getCostList());
+        parser.generatePersonalCosts();
+        costs.addAll(parser.getPersonalCostList());
     }
     public void generateJourneys(){
         Downloader d = new Downloader("https://api-v3.mojepanstwo.pl/dane/poslowie/" + id +

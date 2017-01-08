@@ -14,7 +14,7 @@ public class Parser {
     private String memberName;
 
     private ArrayList<Member> memberList = new ArrayList<>();
-    private ArrayList<PersonalCost> costList = new ArrayList<>();
+    private ArrayList<PersonalCost> personalCostList = new ArrayList<>();
     private ArrayList<Journey> journeys = new ArrayList<>();
 
     public Parser(Option option, String jsonToParse){
@@ -64,7 +64,20 @@ public class Parser {
         memberList.add(member);
     }
 
-    public void parseCosts() {
+    private boolean generateSingleMember(JSONObject o) {
+        JSONObject data = (JSONObject) o.get("data");
+        String name = data.getString("ludzie.nazwa");
+        String id = o.getString("id");
+
+        if(name.equals(memberName)){
+            Member member = new Member(name, id);
+            memberList.add(member);
+            return true;
+        }
+        return false;
+    }
+
+    public void generatePersonalCosts() {
         if (jsonToParse != null) {
             JSONObject jsonObject = new JSONObject(jsonToParse);
             JSONObject layers = (JSONObject) jsonObject.get("layers");
@@ -85,30 +98,12 @@ public class Parser {
                     float value = Float.parseFloat(values.getString(j));
 
                     PersonalCost c = new PersonalCost(number, title, value, year);
-                    costList.add(c);
+                    personalCostList.add(c);
 
                 }
             }
         }
     }
-
-    private boolean generateSingleMember(JSONObject o) {
-        JSONObject data = (JSONObject) o.get("data");
-        String name = data.getString("ludzie.nazwa");
-        String id = o.getString("id");
-
-        if(name.equals(memberName)){
-            Member member = new Member(name, id);
-            memberList.add(member);
-            return true;
-        }
-        return false;
-    }
-    public ArrayList getMembers(){
-        return memberList;
-    }
-    public ArrayList getCostList() { return costList; }
-    public ArrayList getJourneys() {return journeys; }
 
     public void generateJourneys() {
         if (jsonToParse != null) {
@@ -116,19 +111,25 @@ public class Parser {
             JSONObject layers = (JSONObject) jsonObject.get("layers");
 
             if (layers.get("wyjazdy") instanceof JSONArray) {
-                JSONArray voyages = layers.getJSONArray("wyjazdy");
-                for (int i = 0; i < voyages.length(); i++) {
-                    JSONObject v = voyages.getJSONObject(i);
+                JSONArray journeys = layers.getJSONArray("wyjazdy");
+                for (int i = 0; i < journeys.length(); i++) {
+                    JSONObject j = journeys.getJSONObject(i);
 
-                    String country = v.getString("kraj");
-                    int time = Integer.parseInt(v.getString("liczba_dni"));
-                    double cost = Double.parseDouble(v.getString("koszt_suma"));
+                    String country = j.getString("kraj");
+                    int time = Integer.parseInt(j.getString("liczba_dni"));
+                    double cost = Double.parseDouble(j.getString("koszt_suma"));
 
                     if (!country.equals("Polska"))
-                        journeys.add(new Journey(country, time, cost));
+                        this.journeys.add(new Journey(country, time, cost));
 
                 }
             }
         }
     }
+
+    public ArrayList getMembers(){
+        return memberList;
+    }
+    public ArrayList getPersonalCostList() { return personalCostList; }
+    public ArrayList getJourneys() {return journeys; }
 }

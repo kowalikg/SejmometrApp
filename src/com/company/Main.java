@@ -13,20 +13,24 @@ public class Main {
         System.exit(1);
     }
 
-    Downloader d = new Downloader(argParser.linkGenerator() + 1);
-    d.download();
-    Parser parser;
-    if(argParser.getOption().equals(Option.MEMBER_D_COSTS) || argParser.getOption().equals(Option.MEMBER_S_COSTS)){
-        parser = new Parser(argParser.getOption(), d.getJsonResult(), argParser.getMemberName());
-    }
-    else{
-        parser = new Parser(argParser.getOption(), d.getJsonResult());
-    }
-
-    parser.parseMainJson();
-
     Parliament parliament = new Parliament(argParser.getCadency());
-    parliament.pushMembers(parser.getMembers());
+
+    for (int i = 1; i < 16; i++){
+        Downloader d = new Downloader(argParser.linkGenerator() + i);
+        d.download();
+        Parser parser;
+        if(argParser.getOption().equals(Option.MEMBER_D_COSTS) || argParser.getOption().equals(Option.MEMBER_S_COSTS)){
+            parser = new Parser(argParser.getOption(), d.getJsonResult(), argParser.getMemberName());
+        }
+        else{
+            parser = new Parser(argParser.getOption(), d.getJsonResult());
+        }
+
+        parser.parseMainJson();
+
+        parliament.pushMembers(parser.getMembers());
+    }
+
     parliament.show();
 
     switch(argParser.getOption()){
