@@ -21,15 +21,10 @@ public class Parliament {
             System.out.println(m);
         }
     }
-    public void generateCosts(){
-        for (Member m: members
-                ) {
-            m.generateCosts();
-        }
-    }
     public float getMemberLittleCosts(){
         float sum = 0;
         for (Member m: members) {
+            m.generateCosts();
             sum += m.getLittleCostsValue();
         }
         return sum;
@@ -37,8 +32,59 @@ public class Parliament {
     public float generateAverageCosts(){
         float costSum = 0;
         for (Member m: members) {
+            m.generateCosts();
+            m.generateJourneys();
             costSum += m.getAllCosts();
         }
         return costSum/members.size();
+    }
+
+    public ArrayList getMembersItalyVoyages() {
+        ArrayList<Member> italyMembers = new ArrayList<>();
+        for (Member m: members) {
+            m.generateJourneys();
+            if (m.ifHasVisitedItaly())
+                italyMembers.add(m);
+        }
+        return italyMembers;
+    }
+
+    public Member getMemberWithMostJourneys() {
+        Member winner = members.get(0);
+        for (Member m: members) {
+            m.generateJourneys();
+            if(m.getNumberOfVoyages() > winner.getNumberOfVoyages()){
+                winner = m;
+            }
+        }
+        if(winner.getNumberOfVoyages() > 0)
+            return winner;
+        return null;
+    }
+
+    public Member getMemberWithLongestJourneys() {
+        Member winner = members.get(0);
+        for (Member m: members) {
+            m.generateJourneys();
+            if (m.getVoyagesTime() > winner.getVoyagesTime()){
+                winner = m;
+            }
+        }
+        if (winner.getVoyagesTime() > 0)
+            return winner;
+        return null;
+    }
+
+    public Member getMemberWithMostExpensiveJourney() {
+        Member winner = members.get(0);
+        for (Member m: members) {
+            m.generateJourneys();
+            if (m.getJourneyMaxCost() > winner.getJourneyMaxCost()){
+                winner = m;
+            }
+        }
+        if (winner.getJourneyMaxCost() > 0)
+            return winner;
+        return null;
     }
 }

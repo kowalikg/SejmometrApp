@@ -27,7 +27,6 @@ public class Main {
 
     Parliament parliament = new Parliament(argParser.getCadency());
     parliament.pushMembers(parser.getMembers());
-    parliament.generateCosts();
     parliament.show();
 
     switch(argParser.getOption()){
@@ -40,6 +39,17 @@ public class Main {
         case AVERAGE_ALL_COST:
             System.out.println(parliament.generateAverageCosts());
             break;
+        case ITALY_JOURNEYS:
+            System.out.println(parliament.getMembersItalyVoyages());
+            break;
+        case MOST_JOURNEYS:
+            System.out.println(parliament.getMemberWithMostJourneys());
+            break;
+        case LONGEST_JOURNEY:
+            System.out.println(parliament.getMemberWithLongestJourneys());
+            break;
+        case MOST_EXPENSIVE_JOURNEY:
+            System.out.println(parliament.getMemberWithMostExpensiveJourney());
         default: break;
     }
 

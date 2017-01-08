@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Member {
     private String name;
     private String id;
-    private ArrayList<Cost> costs;
+    private ArrayList<Cost> costs = new ArrayList<>();
 
     public Member(String name, String id){
         this.name = name;
@@ -20,10 +20,17 @@ public class Member {
         d.download();
         Parser parser = new Parser(d.getJsonResult());
         parser.parseCosts();
-        costs = parser.getCostList();
-
-
+        costs.addAll(parser.getCostList());
     }
+    public void generateJourneys(){
+        Downloader d = new Downloader("https://api-v3.mojepanstwo.pl/dane/poslowie/" + id +
+                ".json?layers[]=wyjazdy");
+        d.download();
+        Parser parser = new Parser(d.getJsonResult());
+        parser.generateJourneys();
+        costs.addAll(parser.getJourneys());
+    }
+
     public float getAllCosts(){
         float costsSum = 0;
         for (Cost c: costs
@@ -33,9 +40,16 @@ public class Member {
         }
         return costsSum;
     }
-    public float getVoyageMaxCost(){
-        //znajdz najdrozsza wycieczke zagraniczna
-        return 0;
+    public double getJourneyMaxCost(){
+        double maxCost = 0;
+        for (Cost c: costs) {
+            if (c instanceof Journey){
+                if (maxCost < c.getCost()){
+                    maxCost = c.getCost();
+                }
+            }
+        }
+        return maxCost;
     }
     public float getLittleCostsValue(){
         float sum = 0;
@@ -51,14 +65,39 @@ public class Member {
         return sum;
     }
     public int getNumberOfVoyages(){
-        //zwroc liczbe podrozy zagranicznych
-        return 0;
+        int numberOfJourneys = 0;
+
+        for (Cost c: costs) {
+            if (c instanceof Journey){
+                numberOfJourneys++;
+            }
+        }
+        return numberOfJourneys;
     }
     public int getVoyagesTime(){
-        //zwróć łączny czas za granicą
-        return 0;
+        int daysAbroad = 0;
+
+        for (Cost c: costs) {
+            if (c instanceof Journey){
+                daysAbroad += ((Journey) c).getTime();
+            }
+        }
+        return daysAbroad;
     }
     public String toString(){
         return "Numer : " + id +  ", imię i nazwisko : " + name;
     }
+
+    public boolean ifHasVisitedItaly() {
+        if (costs != null){
+            for (Cost c: costs ) {
+                if (c instanceof Journey){
+                    if (((Journey) c).getCountry().equals("Włochy"))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }

@@ -3,11 +3,15 @@ package com.company;
 /**
  * Created by Gabrysia on 16.12.2016.
  */
-public class Voyage extends Cost{
+public class Journey extends Cost{
     private int time;
     private String country;
 
-    public Voyage(/*argumenty z JSONA*/){};
+    public Journey(String country, int time, double cost){
+        this.country = country;
+        this.time = time;
+        this.cost = cost;
+    };
 
     public String getCountry(){return country;}
     public int getTime(){return time;}

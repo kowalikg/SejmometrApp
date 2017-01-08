@@ -15,7 +15,7 @@ public class Parser {
 
     private ArrayList<Member> memberList = new ArrayList<>();
     private ArrayList<PersonalCost> costList = new ArrayList<>();
-
+    private ArrayList<Journey> journeys = new ArrayList<>();
 
     public Parser(Option option, String jsonToParse){
         this.option = option;
@@ -92,8 +92,6 @@ public class Parser {
         }
     }
 
-
-
     private boolean generateSingleMember(JSONObject o) {
         JSONObject data = (JSONObject) o.get("data");
         String name = data.getString("ludzie.nazwa");
@@ -110,6 +108,27 @@ public class Parser {
         return memberList;
     }
     public ArrayList getCostList() { return costList; }
+    public ArrayList getJourneys() {return journeys; }
 
+    public void generateJourneys() {
+        if (jsonToParse != null) {
+            JSONObject jsonObject = new JSONObject(jsonToParse);
+            JSONObject layers = (JSONObject) jsonObject.get("layers");
 
+            if (layers.get("wyjazdy") instanceof JSONArray) {
+                JSONArray voyages = layers.getJSONArray("wyjazdy");
+                for (int i = 0; i < voyages.length(); i++) {
+                    JSONObject v = voyages.getJSONObject(i);
+
+                    String country = v.getString("kraj");
+                    int time = Integer.parseInt(v.getString("liczba_dni"));
+                    double cost = Double.parseDouble(v.getString("koszt_suma"));
+
+                    if (!country.equals("Polska"))
+                        journeys.add(new Journey(country, time, cost));
+
+                }
+            }
+        }
+    }
 }
