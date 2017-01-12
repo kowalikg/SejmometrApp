@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -21,69 +22,87 @@ public class Parliament {
             System.out.println(m);
         }
     }
-    public float getMemberLittleCosts(){
+    public float getMemberLittleCosts() throws IOException{
         float sum = 0;
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateCosts();
-            sum += m.getLittleCostsValue();
+            sum += m.getLittleCostsValue(cadency);
+            i++;
         }
         return sum;
     }
-    public float generateAverageCosts(){
+    public float generateAverageCosts() throws IOException{
         float costSum = 0;
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateCosts();
             m.generateJourneys();
-            costSum += m.getAllCosts();
+            costSum += m.getAllCosts(cadency);
+            i++;
         }
         return costSum/members.size();
     }
 
-    public ArrayList getMembersItalyVoyages() {
+    public ArrayList getMembersItalyVoyages() throws IOException {
         ArrayList<Member> italyMembers = new ArrayList<>();
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateJourneys();
-            if (m.ifHasVisitedItaly())
+            if (m.ifHasVisitedItaly(cadency))
                 italyMembers.add(m);
+            i++;
         }
         return italyMembers;
     }
 
-    public Member getMemberWithMostJourneys() {
+    public Member getMemberWithMostJourneys() throws IOException {
         Member winner = members.get(0);
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateJourneys();
-            if(m.getNumberOfVoyages() > winner.getNumberOfVoyages()){
+            if(m.getNumberOfVoyages(cadency) > winner.getNumberOfVoyages(cadency)){
                 winner = m;
             }
+            i++;
         }
-        if(winner.getNumberOfVoyages() > 0)
+        if(winner.getNumberOfVoyages(cadency) > 0)
             return winner;
         return null;
     }
 
-    public Member getMemberWithLongestJourneys() {
+    public Member getMemberWithLongestJourneys() throws IOException {
         Member winner = members.get(0);
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateJourneys();
-            if (m.getVoyagesTime() > winner.getVoyagesTime()){
+            if (m.getAllVoyagesTime(cadency) > winner.getAllVoyagesTime(cadency)){
                 winner = m;
             }
+            i++;
         }
-        if (winner.getVoyagesTime() > 0)
+        if (winner.getAllVoyagesTime(cadency) > 0)
             return winner;
         return null;
     }
 
-    public Member getMemberWithMostExpensiveJourney() {
+    public Member getMemberWithMostExpensiveJourney() throws IOException {
         Member winner = members.get(0);
+        int i = 1;
         for (Member m: members) {
+            System.out.println("Przetwarzanie posła: " + i + " z " + members.size());
             m.generateJourneys();
-            if (m.getJourneyMaxCost() > winner.getJourneyMaxCost()){
+            if (m.getJourneyMaxCost(cadency) > winner.getJourneyMaxCost(cadency)){
                 winner = m;
             }
+            i++;
         }
-        if (winner.getJourneyMaxCost() > 0)
+        if (winner.getJourneyMaxCost(cadency) > 0)
             return winner;
         return null;
     }

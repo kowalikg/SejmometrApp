@@ -1,8 +1,10 @@
 package com.company;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -15,29 +17,22 @@ public class Downloader {
     public Downloader(String jsonUrl){
         this.jsonUrl = jsonUrl;
     }
-    public void download(){
-        System.out.println(jsonUrl);
-        URL url = null;
-        try {
-            url = new URL(jsonUrl);
-            HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
+    public void download() throws IOException{
+       //System.out.println(jsonUrl);
 
-            InputStream inputStream = httpURLConnection.getInputStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        URL url = new URL(jsonUrl);
+        HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
 
-            String line="";
-            while((line = bufferedReader.readLine()) != null){
-                jsonResult += line;
-            }
-            bufferedReader.close();
-            inputStream.close();
-            httpURLConnection.disconnect();
+        InputStream inputStream = httpURLConnection.getInputStream();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        String line="";
+        while((line = bufferedReader.readLine()) != null){
+            jsonResult += line;
         }
+        bufferedReader.close();
+        inputStream.close();
+        httpURLConnection.disconnect();
     }
 
     public String getJsonResult(){

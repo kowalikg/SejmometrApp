@@ -1,5 +1,6 @@
 package com.company;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -14,7 +15,7 @@ public class Member {
         this.name = name;
         this.id = id;
     }
-    public void generateCosts(){
+    public void generateCosts() throws IOException{
         Downloader d = new Downloader("https://api-v3.mojepanstwo.pl/dane/poslowie/" + id +
                 ".json?layers[]=wydatki");
         d.download();
@@ -22,7 +23,7 @@ public class Member {
         parser.generatePersonalCosts();
         costs.addAll(parser.getPersonalCostList());
     }
-    public void generateJourneys(){
+    public void generateJourneys() throws IOException{
         Downloader d = new Downloader("https://api-v3.mojepanstwo.pl/dane/poslowie/" + id +
                 ".json?layers[]=wyjazdy");
         d.download();
@@ -31,55 +32,66 @@ public class Member {
         costs.addAll(parser.getJourneys());
     }
 
-    public float getAllCosts(){
+    public float getAllCosts(int cadency){
         float costsSum = 0;
         for (Cost c: costs
              ) {
-            costsSum += c.getCost();
+            if(c.getYearCadency() == cadency){
+                costsSum += c.getCost();
+            }
+
 
         }
         return costsSum;
     }
-    public double getJourneyMaxCost(){
+    public double getJourneyMaxCost(int cadency){
         double maxCost = 0;
         for (Cost c: costs) {
             if (c instanceof Journey){
-                if (maxCost < c.getCost()){
-                    maxCost = c.getCost();
+                if(c.getYearCadency() == cadency) {
+                    if (maxCost < c.getCost()) {
+                        maxCost = c.getCost();
+                    }
                 }
             }
         }
         return maxCost;
     }
-    public float getLittleCostsValue(){
+    public float getLittleCostsValue(int cadency){
         float sum = 0;
         String littleCosts = "Koszty drobnych napraw i remontów lokalu biura poselskiego";
         for (Cost c: costs) {
             if (c instanceof PersonalCost){
-                if(((PersonalCost) c).getDescription().equals(littleCosts)){
-                    sum += c.getCost();
+                if(c.getYearCadency() == cadency) {
+                    if (((PersonalCost) c).getDescription().equals(littleCosts)) {
+                        sum += c.getCost();
+                    }
                 }
             }
 
         }
         return sum;
     }
-    public int getNumberOfVoyages(){
+    public int getNumberOfVoyages(int cadency){
         int numberOfJourneys = 0;
 
         for (Cost c: costs) {
             if (c instanceof Journey){
-                numberOfJourneys++;
+                if(c.getYearCadency() == cadency) {
+                    numberOfJourneys++;
+                }
             }
         }
         return numberOfJourneys;
     }
-    public int getVoyagesTime(){
+    public int getAllVoyagesTime(int cadency){
         int daysAbroad = 0;
 
         for (Cost c: costs) {
             if (c instanceof Journey){
-                daysAbroad += ((Journey) c).getTime();
+                if(c.getYearCadency() == cadency) {
+                    daysAbroad += ((Journey) c).getTime();
+                }
             }
         }
         return daysAbroad;
@@ -88,16 +100,19 @@ public class Member {
         return "Numer : " + id +  ", imię i nazwisko : " + name;
     }
 
-    public boolean ifHasVisitedItaly() {
+    public boolean ifHasVisitedItaly(int cadency) {
         if (costs != null){
             for (Cost c: costs ) {
                 if (c instanceof Journey){
-                    if (((Journey) c).getCountry().equals("Włochy"))
-                        return true;
+                    if(c.getYearCadency() == cadency) {
+                        if (((Journey) c).getCountry().equals("Włochy"))
+                            return true;
+                    }
                 }
             }
         }
         return false;
     }
+
 
 }

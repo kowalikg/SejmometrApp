@@ -1,6 +1,7 @@
 package com.company;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -38,15 +39,18 @@ public class Parser {
 
             if(option.equals(Option.MEMBER_D_COSTS) || option.equals(Option.MEMBER_S_COSTS)){
                 for(int i = 0; i < jsonArray.length(); i++){
+                    System.out.println("Przetwarzanie posła: " + (i+1) + " z " + jsonArray.length() );
                     JSONObject o = jsonArray.getJSONObject(i);
                     if(generateSingleMember(o)){
                         return;
                     }
                 }
-                throw new IllegalArgumentException("Parser: the member doesnt exists");
+                throw new IllegalArgumentException("Parser: the member doesn't exists");
             }
             else{
                 for(int i = 0; i < jsonArray.length(); i++) {
+                    System.out.print("\033[H\033[2J");
+                    System.out.println("Przetwarzanie posła: " + (i+1) + " z " + jsonArray.length() );
                     JSONObject o = jsonArray.getJSONObject(i);
                     generateMember(o);
                 }
@@ -112,15 +116,17 @@ public class Parser {
 
             if (layers.get("wyjazdy") instanceof JSONArray) {
                 JSONArray journeys = layers.getJSONArray("wyjazdy");
+                //System.out.println(jsonToParse);
                 for (int i = 0; i < journeys.length(); i++) {
                     JSONObject j = journeys.getJSONObject(i);
 
                     String country = j.getString("kraj");
                     int time = Integer.parseInt(j.getString("liczba_dni"));
                     double cost = Double.parseDouble(j.getString("koszt_suma"));
+                    int year = Integer.parseInt(j.getString("od").substring(0,4));
 
                     if (!country.equals("Polska"))
-                        this.journeys.add(new Journey(country, time, cost));
+                        this.journeys.add(new Journey(country, time, cost, year));
 
                 }
             }
@@ -132,4 +138,17 @@ public class Parser {
     }
     public ArrayList getPersonalCostList() { return personalCostList; }
     public ArrayList getJourneys() {return journeys; }
+
+
+    public boolean ifNextPage() {
+        JSONObject jsonObject = new JSONObject(jsonToParse);
+        JSONObject links = (JSONObject) jsonObject.get("Links");
+        try {
+            String next = links.getString("next");
+        }
+        catch (JSONException e){
+            return false;
+        }
+        return true;
+    }
 }
