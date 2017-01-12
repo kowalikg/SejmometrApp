@@ -49,7 +49,6 @@ public class Parser {
             }
             else{
                 for(int i = 0; i < jsonArray.length(); i++) {
-                    System.out.print("\033[H\033[2J");
                     System.out.println("Przetwarzanie posła: " + (i+1) + " z " + jsonArray.length() );
                     JSONObject o = jsonArray.getJSONObject(i);
                     generateMember(o);

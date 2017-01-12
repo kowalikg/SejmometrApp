@@ -41,7 +41,6 @@ public class ArgumentParser {
     }
 
     private boolean validateParliamentOption() {
-
         Option o = optionHashMap.get(argsToValidate[1]);
 
         if (o != null && o != Option.MEMBER_D_COSTS && o!= Option.MEMBER_S_COSTS){
@@ -52,7 +51,6 @@ public class ArgumentParser {
     }
 
     private boolean validateMemberName(){
-
         if (argsToValidate[3].equals("-d") || argsToValidate[3].equals("-s")){
 
             memberFirstName = argsToValidate[1];
@@ -87,7 +85,7 @@ public class ArgumentParser {
         return false;
     }
 
-    private boolean validateRomanCadency() {
+     private boolean validateRomanCadency() {
 
         switch(argsToValidate[0]){
             case "VII": this.cadency = 7; return true;
